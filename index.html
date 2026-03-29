@@ -1,138 +1,244 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Advanced Event Studio</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Advanced Event Studio</title>
 
-    <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=cabinet-grotesk@500,700&display=swap" rel="stylesheet">
+        <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=cabinet-grotesk@500,700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-
-    
-    <a class="skip-link" href="#main">Skip to content</a>
-
-    <div class="app">
-
-        <!-- HEADER: brand + actions -->
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <a class="skip-link" href="#main">Skip to content</a>
+        <div class="app">
         <header>
-        <div class="brand">
-            
-            <div class="logo" aria-hidden="true">★</div>
             <div>
-            <h1>Advanced Event Studio</h1>
-            <p>We'll build this step by step.</p>
+            <div class="brand">
+                <div class="logo" aria-hidden="true">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.9"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-label="Advanced Event Studio logo"
+                >
+                    <path d="M5 7h8a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h10" />
+                    <circle
+                    cx="16"
+                    cy="7"
+                    r="2.2"
+                    fill="currentColor"
+                    stroke="none"
+                    />
+                </svg>
+                </div>
+                <div>
+                <h1>Advanced Event Studio</h1>
+                <p>
+                    Mini web app to practice event delegation, pointer events,
+                    keyboard shortcuts, live validation, and interaction logging.
+                </p>
+                </div>
             </div>
-        </div>
-
-        <!-- Theme toggle lives here> -->
-        <div class="header-actions">
-            <button class="ghost-btn" id="themeToggle" type="button">Theme</button>
-        </div>
+            <div class="shortcut-list" aria-label="Keyboard shortcuts">
+                <span class="kbd">N</span><span class="hint">new task</span>
+                <span class="kbd">/</span><span class="hint">focus title</span>
+                <span class="kbd">D</span><span class="hint">toggle theme</span>
+                <span class="kbd">L</span><span class="hint">clear log</span>
+            </div>
+            </div>
+            <div class="header-actions">
+            <button class="ghost-btn" id="clearLogBtn" type="button">
+                Clear log
+            </button>
+            <button
+                class="theme-toggle"
+                id="themeToggle"
+                type="button"
+                aria-label="Toggle theme"
+            >
+                Theme
+            </button>
+            </div>
         </header>
 
-
         <main id="main" class="layout">
-
-            <!-- LEFT: board area -->
-            <section class="panel" aria-labelledby="board-title">
-                <div class="panel-head">
+            <section class="panel" aria-labelledby="playground-title">
+            <div class="toolbar" id="toolbar" aria-label="Task filters">
+                <button
+                class="chip"
+                data-filter="all"
+                aria-pressed="true"
+                type="button"
+                >
+                All
+                </button>
+                <button
+                class="chip"
+                data-filter="todo"
+                aria-pressed="false"
+                type="button"
+                >
+                Todo
+                </button>
+                <button
+                class="chip"
+                data-filter="review"
+                aria-pressed="false"
+                type="button"
+                >
+                Review
+                </button>
+                <button
+                class="chip"
+                data-filter="done"
+                aria-pressed="false"
+                type="button"
+                >
+                Done
+                </button>
+            </div>
+            <div class="playground-wrap">
+                <h2 id="playground-title">Pointer-driven board</h2>
+                <p>
+                Move the pointer over the board to update the live spotlight. Drag
+                task cards using unified pointer events; the board uses one
+                delegated click listener for filter controls.
+                </p>
+                <div
+                class="playground"
+                id="playground"
+                aria-label="Interactive task board"
+                >
+                <div class="playground-grid" aria-hidden="true"></div>
+                <div class="task-list" id="taskList">
+                    <article class="task-card" data-status="todo" data-id="1">
+                    <div class="drag-handle" title="Drag task" aria-hidden="true">
+                        ⋮⋮
+                    </div>
                     <div>
-                        <h2 id="board-title">Board</h2>
-                        <p>Filter tasks by status and manage them live.</p>
+                        <div class="task-title">Audit checkout events</div>
+                        <div class="task-meta">Checkout funnel · high priority</div>
                     </div>
-
-                    <div class="toolbar" aria-label="Board filters">
-                        <button class="chip chip-active" type="button" data-filter="All">All</button>
-                        <button class="chip" type="button" data-filter="Active">Active</button>
-                        <button class="chip" type="button" data-filter="Completed">Completed</button>
+                    <span class="status todo">Todo</span>
+                    </article>
+                    <article class="task-card" data-status="review" data-id="2">
+                    <div class="drag-handle" title="Drag task" aria-hidden="true">
+                        ⋮⋮
                     </div>
+                    <div>
+                        <div class="task-title">Review pointer gestures</div>
+                        <div class="task-meta">Touch + pen compatibility</div>
+                    </div>
+                    <span class="status review">Review</span>
+                    </article>
+                    <article class="task-card" data-status="done" data-id="3">
+                    <div class="drag-handle" title="Drag task" aria-hidden="true">
+                        ⋮⋮
+                    </div>
+                    <div>
+                        <div class="task-title">Submit analytics form safely</div>
+                        <div class="task-meta">Prevent default and validate</div>
+                    </div>
+                    <span class="status done">Done</span>
+                    </article>
                 </div>
+                </div>
+                <div class="banner">
+                Industry note: this app uses delegation to reduce listener count
+                and pointer events to unify mouse and touch behavior.
+                </div>
+            </div>
+            </section>
 
-                <div class="task-grid" id="taskGrid">
-                    <article class="task-card">
-                        <span class="task-badge">UI</span>
-                        <h3>Build board toolbar</h3>
-                        <p>Create filter chips and a clean header layout for the board.</p>
-                    </article>
-
-                    <article class="task-card">
-                        <span class="task-badge">API</span>
-                        <h3>Connect tasks endpoint</h3>
-                        <p>Prepare the frontend structure for future fetch integration.</p>
-                    </article>
-
-                    <article class="task-card">
-                        <span class="task-badge">Bug</span>
-                        <h3>Fix mobile spacing</h3>
-                        <p>Check padding and stacked layout on smaller screens.</p>
-                    </article>
-
-                    <article class="task-card">
-                        <span class="task-badge">UI</span>
-                        <h3>Add empty state style</h3>
-                        <p>Design a polished fallback when there are no tasks.</p>
-                    </article>
+            <aside class="side">
+            <section class="panel">
+                <div class="panel-inner">
+                <h2>Create task</h2>
+                <p>
+                    Add a task with live validation and submit interception, which
+                    is how modern apps avoid full-page reloads.
+                </p>
+                <form id="taskForm" novalidate>
+                    <div class="field">
+                    <label for="taskTitle">Task title</label>
+                    <input
+                        id="taskTitle"
+                        name="taskTitle"
+                        type="text"
+                        placeholder="Example: Build event dashboard"
+                        minlength="4"
+                        maxlength="60"
+                        required
+                    />
+                    <div class="hint" id="titleHint">
+                        4-60 characters. Press / to focus here.
+                    </div>
+                    </div>
+                    <div class="field">
+                    <label for="taskStatus">Status</label>
+                    <select id="taskStatus" name="taskStatus">
+                        <option value="todo">Todo</option>
+                        <option value="review">Review</option>
+                        <option value="done">Done</option>
+                    </select>
+                    </div>
+                    <div class="field">
+                    <label for="taskMeta">Meta info</label>
+                    <input
+                        id="taskMeta"
+                        name="taskMeta"
+                        type="text"
+                        placeholder="Example: Billing team · sprint 4"
+                        maxlength="80"
+                    />
+                    </div>
+                    <button class="primary-btn" type="submit">Add task</button>
+                </form>
                 </div>
             </section>
 
-            <!-- RIGHT: sidebar -->
-            <aside class="side">
-                <section class="panel" aria-labelledby="create-task-title">
-                    <h2 id="create-task-title">Create task</h2>
-
-                    <form class="task-form" id="taskForm">
-                        <label>
-                            Title
-                            <input id="taskTitle" type="text" placeholder="Ex. Build drag feature" />
-                        </label>
-
-                        <label>
-                            Type
-                            <select id="taskType">
-                            <option value="UI">UI</option>
-                            <option value="API">API</option>
-                            <option value="Bug">Bug</option>
-                            </select>
-                        </label>
-
-                        <label>
-                            Notes
-                            <textarea id="taskDescription" rows="4" placeholder="Short task description..."></textarea>
-                        </label>
-
-                        <button class="primary-btn" type="submit">Add task</button>
-                    </form>
-                </section>
-
-                <section class="panel" aria-labelledby="metrics-title">
-                    <h2 id="metrics-title">Live metrics</h2>
-
-                    <div class="metric-list">
-                        <div class="metric">
-                            <span>Total tasks</span>
-                            <strong id="totalTasksText">4</strong>
-                        </div>
-
-                        <div class="metric">
-                            <span>Completed</span>
-                            <strong id="completedTasksText">0</strong>
-                        </div>
-
-                        <div class="metric">
-                            <span>Selected filter</span>
-                            <strong id="selectedFilterText">All</strong>
-                        </div>
+            <section class="panel">
+                <div class="panel-inner">
+                <h2>Live metrics</h2>
+                <div class="metrics">
+                    <div class="metric">
+                    <div class="metric-value" id="taskCount">3</div>
+                    <div class="metric-label">Visible tasks</div>
                     </div>
-                </section>
+                    <div class="metric">
+                    <div class="metric-value" id="listenerCount">4</div>
+                    <div class="metric-label">Main listeners</div>
+                    </div>
+                    <div class="metric">
+                    <div class="metric-value" id="pointerPosition">0, 0</div>
+                    <div class="metric-label">Pointer position</div>
+                    </div>
+                    <div class="metric">
+                    <div class="metric-value" id="activeFilter">all</div>
+                    <div class="metric-label">Active filter</div>
+                    </div>
+                </div>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-inner">
+                <h2>Interaction log</h2>
+                <p>
+                    Watch how different events enter the app state. This is useful
+                    for debugging and interview explanation.
+                </p>
+                <div class="log" id="log" aria-live="polite"></div>
+                </div>
+            </section>
             </aside>
-
         </main>
-    </div>
+        </div>
 
-    
-    <script src="script.js"></script>
-</body>
+        <script src="script.js"></script>
+    </body>
 </html>
