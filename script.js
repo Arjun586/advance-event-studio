@@ -7,25 +7,29 @@ const state = {
         id: 1,
         type: 'UI',
         title: 'Build board toolbar',
-        description: 'Create filter chips and a clean header layout for the board.'
+        description: 'Create filter chips and a clean header layout for the board.',
+        completed: false,
         },
         {
         id: 2,
         type: 'API',
         title: 'Connect tasks endpoint',
-        description: 'Prepare the frontend structure for future fetch integration.'
+        description: 'Prepare the frontend structure for future fetch integration.',
+        completed: false,
         },
         {
         id: 3,
         type: 'Bug',
         title: 'Fix mobile spacing',
-        description: 'Check padding and stacked layout on smaller screens.'
+        description: 'Check padding and stacked layout on smaller screens.',
+        completed: false,
         },
         {
         id: 4,
         type: 'UI',
         title: 'Add empty state style',
-        description: 'Design a polished fallback when there are no tasks.'
+        description: 'Design a polished fallback when there are no tasks.',
+        completed: false,
         }
     ]
 };
@@ -40,6 +44,7 @@ const taskForm = document.getElementById('taskForm');
 const taskTitleInput = document.getElementById('taskTitle');
 const taskTypeInput = document.getElementById('taskType');
 const taskDescriptionInput = document.getElementById('taskDescription');
+const completedTasksText = document.getElementById('completedTasksText');
 
 // apply the current theme when the page loads
 document.documentElement.setAttribute('data-theme', state.theme);
@@ -68,12 +73,21 @@ function updateActiveChip() {
 }
 
 // return tasks based on the current filter
+// return tasks based on the current filter
 function getFilteredTasks() {
     if (state.activeFilter === 'All') {
         return state.tasks;
     }
 
-    return state.tasks.filter((task) => task.type === state.activeFilter);
+    if (state.activeFilter === 'Active') {
+        return state.tasks.filter((task) => !task.completed);
+    }
+
+    if (state.activeFilter === 'Completed') {
+        return state.tasks.filter((task) => task.completed);
+    }
+
+    return state.tasks;
 }
 
 // draw the task cards on the page
@@ -82,6 +96,8 @@ function renderTasks() {
 
     selectedFilterText.textContent = state.activeFilter;
     totalTasksText.textContent = state.tasks.length;
+    const completedCount = state.tasks.filter((task) => task.completed).length;
+    completedTasksText.textContent = completedCount;
 
     if (filteredTasks.length === 0) {
         taskGrid.innerHTML = `
@@ -96,11 +112,15 @@ function renderTasks() {
     taskGrid.innerHTML = filteredTasks
         .map((task) => {
         return `
-            <article class="task-card">
-            <button class="delete-btn" data-id="${task.id}" type="button">×</button>
-            <span class="task-badge">${task.type}</span>
-            <h3>${task.title}</h3>
-            <p>${task.description}</p>
+            <article class="task-card ${task.completed ? 'task-done' : ''}">
+                <button class="delete-btn" data-id="${task.id}" type="button">×</button>
+                <button class="complete-btn" data-id="${task.id}" type="button">
+                    ${task.completed ? 'Undo' : 'Done'}
+                </button>
+                <button class="edit-btn" data-id="${task.id}" type="button">Edit</button>
+                <span class="task-badge">${task.type}</span>
+                <h3>${task.title}</h3>
+                <p>${task.description}</p>
             </article>
         `;
         })
@@ -147,6 +167,59 @@ taskGrid.addEventListener('click', (event) => {
     const taskId = Number(deleteButton.dataset.id);
 
     state.tasks = state.tasks.filter((task) => task.id !== taskId);
+    renderTasks();
+});
+
+// edit task title when edit button is clicked
+taskGrid.addEventListener('click', (event) => {
+    const editButton = event.target.closest('.edit-btn');
+
+    if (!editButton) {
+        return;
+    }
+
+    const taskId = Number(editButton.dataset.id);
+    const taskToEdit = state.tasks.find((task) => task.id === taskId);
+
+    if (!taskToEdit) {
+        return;
+    }
+
+    const newTitle = prompt('Edit task title:', taskToEdit.title);
+
+    if (!newTitle || !newTitle.trim()) {
+        return;
+    }
+
+    state.tasks = state.tasks.map((task) => {
+        if (task.id === taskId) {
+        return { ...task, title: newTitle.trim() };
+        }
+
+        return task;
+    });
+
+    renderTasks();
+});
+
+// toggle completed state when done button is clicked
+taskGrid.addEventListener('click', (event) => {
+    const completeButton = event.target.closest('.complete-btn');
+
+    if (!completeButton) {
+        return;
+    }
+
+    const taskId = Number(completeButton.dataset.id);
+
+    state.tasks = state.tasks.map((task) => {
+        if (task.id === taskId) {
+        return { ...task, completed: !task.completed };
+        }
+
+        return task;
+    });
+
     renderTasks();
 });
 

@@ -41,14 +41,13 @@
                 <div class="panel-head">
                     <div>
                         <h2 id="board-title">Board</h2>
-                        <p>Static cards for now. Interactions come next.</p>
+                        <p>Filter tasks by status and manage them live.</p>
                     </div>
 
                     <div class="toolbar" aria-label="Board filters">
                         <button class="chip chip-active" type="button" data-filter="All">All</button>
-                        <button class="chip" type="button" data-filter="UI">UI</button>
-                        <button class="chip" type="button" data-filter="API">API</button>
-                        <button class="chip" type="button" data-filter="Bug">Bug</button>
+                        <button class="chip" type="button" data-filter="Active">Active</button>
+                        <button class="chip" type="button" data-filter="Completed">Completed</button>
                     </div>
                 </div>
 
@@ -113,18 +112,18 @@
 
                     <div class="metric-list">
                         <div class="metric">
-                        <span>Total tasks</span>
-                        <strong id="totalTasksText">4</strong>
+                            <span>Total tasks</span>
+                            <strong id="totalTasksText">4</strong>
                         </div>
 
                         <div class="metric">
-                        <span>Completed</span>
-                        <strong>0</strong>
+                            <span>Completed</span>
+                            <strong id="completedTasksText">0</strong>
                         </div>
 
                         <div class="metric">
-                        <span>Selected filter</span>
-                        <strong id="selectedFilterText">All</strong>
+                            <span>Selected filter</span>
+                            <strong id="selectedFilterText">All</strong>
                         </div>
                     </div>
                 </section>

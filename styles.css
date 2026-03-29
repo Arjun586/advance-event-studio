@@ -332,3 +332,51 @@ header {
     background: color-mix(in srgb, crimson 10%, transparent);
     color: crimson;
 }
+
+
+.complete-btn {
+    position: absolute;
+    top: 12px;
+    right: 52px;
+    min-width: 54px;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 9999px;
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+    color: var(--color-text-muted);
+    cursor: pointer;
+}
+
+.complete-btn:hover {
+    background: color-mix(in srgb, seagreen 12%, transparent);
+    color: seagreen;
+}
+
+.task-done h3,
+.task-done p {
+    opacity: 0.65;
+}
+
+.task-done h3 {
+    text-decoration: line-through;
+}
+
+.edit-btn {
+    position: absolute;
+    top: 12px;
+    right: 118px;
+    min-width: 54px;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 9999px;
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+    color: var(--color-text-muted);
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background: color-mix(in srgb, royalblue 12%, transparent);
+    color: royalblue;
+}
