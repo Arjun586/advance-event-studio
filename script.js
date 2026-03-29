@@ -97,6 +97,7 @@ function renderTasks() {
         .map((task) => {
         return `
             <article class="task-card">
+            <button class="delete-btn" data-id="${task.id}" type="button">×</button>
             <span class="task-badge">${task.type}</span>
             <h3>${task.title}</h3>
             <p>${task.description}</p>
@@ -131,6 +132,21 @@ taskForm.addEventListener('submit', (event) => {
 
     taskForm.reset();
     updateActiveChip();
+    renderTasks();
+});
+
+
+// remove a task when delete button is clicked
+taskGrid.addEventListener('click', (event) => {
+    const deleteButton = event.target.closest('.delete-btn');
+
+    if (!deleteButton) {
+        return;
+    }
+
+    const taskId = Number(deleteButton.dataset.id);
+
+    state.tasks = state.tasks.filter((task) => task.id !== taskId);
     renderTasks();
 });
 

@@ -310,3 +310,25 @@ header {
 .empty-box h3 {
     margin-bottom: var(--space-2);
 }
+
+.task-card {
+    position: relative;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+    color: var(--color-text-muted);
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: color-mix(in srgb, crimson 10%, transparent);
+    color: crimson;
+}
