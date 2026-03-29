@@ -35,6 +35,11 @@ const taskGrid = document.getElementById('taskGrid');
 const themeToggle = document.getElementById('themeToggle');
 const selectedFilterText = document.getElementById('selectedFilterText');
 const filterButtons = document.querySelectorAll('.chip');
+const totalTasksText = document.getElementById('totalTasksText');
+const taskForm = document.getElementById('taskForm');
+const taskTitleInput = document.getElementById('taskTitle');
+const taskTypeInput = document.getElementById('taskType');
+const taskDescriptionInput = document.getElementById('taskDescription');
 
 // apply the current theme when the page loads
 document.documentElement.setAttribute('data-theme', state.theme);
@@ -76,6 +81,7 @@ function renderTasks() {
     const filteredTasks = getFilteredTasks();
 
     selectedFilterText.textContent = state.activeFilter;
+    totalTasksText.textContent = state.tasks.length;
 
     if (filteredTasks.length === 0) {
         taskGrid.innerHTML = `
@@ -99,6 +105,34 @@ function renderTasks() {
         })
         .join('');
 }
+
+// create a new task from the form
+taskForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const title = taskTitleInput.value.trim();
+    const type = taskTypeInput.value;
+    const description = taskDescriptionInput.value.trim();
+
+    if (!title || !description) {
+        alert('Please fill title and notes.');
+        return;
+    }
+
+    const newTask = {
+        id: Date.now(),
+        type,
+        title,
+        description
+    };
+
+    state.tasks.unshift(newTask);
+    state.activeFilter = 'All';
+
+    taskForm.reset();
+    updateActiveChip();
+    renderTasks();
+});
 
 // show tasks on the first page load
 renderTasks();

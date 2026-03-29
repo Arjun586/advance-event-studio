@@ -82,30 +82,30 @@
             <!-- RIGHT: sidebar -->
             <aside class="side">
                 <section class="panel" aria-labelledby="create-task-title">
-                <h2 id="create-task-title">Create task</h2>
+                    <h2 id="create-task-title">Create task</h2>
 
-                <form class="task-form">
-                    <label>
-                    Title
-                    <input type="text" placeholder="Ex. Build drag feature" />
-                    </label>
+                    <form class="task-form" id="taskForm">
+                        <label>
+                            Title
+                            <input id="taskTitle" type="text" placeholder="Ex. Build drag feature" />
+                        </label>
 
-                    <label>
-                    Type
-                    <select>
-                        <option>UI</option>
-                        <option>API</option>
-                        <option>Bug</option>
-                    </select>
-                    </label>
+                        <label>
+                            Type
+                            <select id="taskType">
+                            <option value="UI">UI</option>
+                            <option value="API">API</option>
+                            <option value="Bug">Bug</option>
+                            </select>
+                        </label>
 
-                    <label>
-                    Notes
-                    <textarea rows="4" placeholder="Short task description..."></textarea>
-                    </label>
+                        <label>
+                            Notes
+                            <textarea id="taskDescription" rows="4" placeholder="Short task description..."></textarea>
+                        </label>
 
-                    <button class="primary-btn" type="button">Add task</button>
-                </form>
+                        <button class="primary-btn" type="submit">Add task</button>
+                    </form>
                 </section>
 
                 <section class="panel" aria-labelledby="metrics-title">
@@ -114,7 +114,7 @@
                     <div class="metric-list">
                         <div class="metric">
                         <span>Total tasks</span>
-                        <strong>4</strong>
+                        <strong id="totalTasksText">4</strong>
                         </div>
 
                         <div class="metric">
