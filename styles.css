@@ -380,3 +380,23 @@ header {
     background: color-mix(in srgb, royalblue 12%, transparent);
     color: royalblue;
 }
+
+
+.edit-note-btn {
+    position: absolute;
+    top: 12px;
+    right: 188px;
+    min-width: 76px;
+    height: 32px;
+    padding: 0 10px;
+    border-radius: 9999px;
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+    color: var(--color-text-muted);
+    cursor: pointer;
+}
+
+.edit-note-btn:hover {
+    background: color-mix(in srgb, darkorange 12%, transparent);
+    color: darkorange;
+}

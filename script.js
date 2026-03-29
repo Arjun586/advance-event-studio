@@ -1,227 +1,184 @@
-// app state and sample task data
+
 const state = {
     theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
-    activeFilter: 'All',
-    tasks: [
-        {
-        id: 1,
-        type: 'UI',
-        title: 'Build board toolbar',
-        description: 'Create filter chips and a clean header layout for the board.',
-        completed: false,
-        },
-        {
-        id: 2,
-        type: 'API',
-        title: 'Connect tasks endpoint',
-        description: 'Prepare the frontend structure for future fetch integration.',
-        completed: false,
-        },
-        {
-        id: 3,
-        type: 'Bug',
-        title: 'Fix mobile spacing',
-        description: 'Check padding and stacked layout on smaller screens.',
-        completed: false,
-        },
-        {
-        id: 4,
-        type: 'UI',
-        title: 'Add empty state style',
-        description: 'Design a polished fallback when there are no tasks.',
-        completed: false,
-        }
-    ]
+    filter: 'all',
+    drag: null,
+    taskId: 4
 };
 
-// elements we need from the page
-const taskGrid = document.getElementById('taskGrid');
+const root = document.documentElement;
+const playground = document.getElementById('playground');
+const taskList = document.getElementById('taskList');
+const toolbar = document.getElementById('toolbar');
+const logNode = document.getElementById('log');
+const form = document.getElementById('taskForm');
+const titleInput = document.getElementById('taskTitle');
+const metaInput = document.getElementById('taskMeta');
+const statusInput = document.getElementById('taskStatus');
+const taskCount = document.getElementById('taskCount');
+const pointerPosition = document.getElementById('pointerPosition');
+const activeFilter = document.getElementById('activeFilter');
 const themeToggle = document.getElementById('themeToggle');
-const selectedFilterText = document.getElementById('selectedFilterText');
-const filterButtons = document.querySelectorAll('.chip');
-const totalTasksText = document.getElementById('totalTasksText');
-const taskForm = document.getElementById('taskForm');
-const taskTitleInput = document.getElementById('taskTitle');
-const taskTypeInput = document.getElementById('taskType');
-const taskDescriptionInput = document.getElementById('taskDescription');
-const completedTasksText = document.getElementById('completedTasksText');
+const clearLogBtn = document.getElementById('clearLogBtn');
+const titleHint = document.getElementById('titleHint');
 
-// apply the current theme when the page loads
-document.documentElement.setAttribute('data-theme', state.theme);
+root.setAttribute('data-theme', state.theme);
 
-// switch between light and dark theme
-themeToggle.addEventListener('click', () => {
+function logEvent(type, detail) {
+    const item = document.createElement('div');
+    item.className = 'log-item';
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    item.innerHTML = `<strong>${type}</strong> · ${detail} <span style="color:var(--color-text-muted)">${time}</span>`;
+    logNode.prepend(item);
+    while (logNode.children.length > 12) logNode.lastElementChild.remove();
+}
+
+function updateMetrics() {
+    const cards = [...taskList.querySelectorAll('.task-card')];
+    const visible = cards.filter(card => !card.hidden).length;
+    taskCount.textContent = String(visible);
+    activeFilter.textContent = state.filter;
+}
+
+function applyFilter(filter) {
+    state.filter = filter;
+    toolbar.querySelectorAll('.chip').forEach(btn => {
+        btn.setAttribute('aria-pressed', String(btn.dataset.filter === filter));
+    });
+    taskList.querySelectorAll('.task-card').forEach(card => {
+        card.hidden = !(filter === 'all' || card.dataset.status === filter);
+    });
+    updateMetrics();
+    logEvent('delegated click', `Filter switched to ${filter}`);
+}
+
+function toggleTheme() {
     state.theme = state.theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', state.theme);
+    root.setAttribute('data-theme', state.theme);
+    logEvent('keyboard/ui event', `Theme changed to ${state.theme}`);
+}
+
+toolbar.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-filter]');
+    if (!button) return;
+    applyFilter(button.dataset.filter);
 });
 
-// update the active filter when a chip is clicked
-filterButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-        state.activeFilter = button.dataset.filter;
-        updateActiveChip();
-        renderTasks();
-    });
+playground.addEventListener('pointermove', (event) => {
+    const rect = playground.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+    playground.style.setProperty('--pointer-x', `${x}%`);
+    playground.style.setProperty('--pointer-y', `${y}%`);
+    pointerPosition.textContent = `${Math.round(event.clientX)}, ${Math.round(event.clientY)}`;
+}, { passive: true });
+
+taskList.addEventListener('pointerdown', (event) => {
+    const card = event.target.closest('.task-card');
+    if (!card) return;
+    state.drag = { id: card.dataset.id, startY: event.clientY, card };
+    card.classList.add('dragging');
+    card.setPointerCapture(event.pointerId);
+    logEvent('pointerdown', `Started dragging "${card.querySelector('.task-title').textContent}"`);
 });
 
-// highlight the selected filter chip
-function updateActiveChip() {
-    filterButtons.forEach((button) => {
-        const isActive = button.dataset.filter === state.activeFilter;
-        button.classList.toggle('chip-active', isActive);
-    });
-}
+taskList.addEventListener('pointerup', (event) => {
+    const card = event.target.closest('.task-card');
+    if (!card || !state.drag) return;
+    card.classList.remove('dragging');
+    try { card.releasePointerCapture(event.pointerId); } catch { }
+    state.drag = null;
+    logEvent('pointerup', `Dropped "${card.querySelector('.task-title').textContent}"`);
+});
 
-// return tasks based on the current filter
-// return tasks based on the current filter
-function getFilteredTasks() {
-    if (state.activeFilter === 'All') {
-        return state.tasks;
+taskList.addEventListener('pointermove', (event) => {
+    if (!state.drag) return;
+    const draggingCard = state.drag.card;
+    const afterElement = [...taskList.querySelectorAll('.task-card:not(.dragging):not([hidden])')]
+        .find(card => event.clientY < card.getBoundingClientRect().top + card.offsetHeight / 2);
+    if (!afterElement) {
+        taskList.appendChild(draggingCard);
+    } else {
+        taskList.insertBefore(draggingCard, afterElement);
     }
+});
 
-    if (state.activeFilter === 'Active') {
-        return state.tasks.filter((task) => !task.completed);
+form.addEventListener('input', (event) => {
+    if (event.target === titleInput) {
+        const length = titleInput.value.trim().length;
+        if (length < 4) {
+            titleHint.textContent = `Need ${4 - length} more character(s).`;
+            titleHint.style.color = 'var(--color-warning)';
+        } else {
+            titleHint.textContent = 'Looks good. Ready to submit.';
+            titleHint.style.color = 'var(--color-success)';
+        }
     }
+});
 
-    if (state.activeFilter === 'Completed') {
-        return state.tasks.filter((task) => task.completed);
-    }
-
-    return state.tasks;
-}
-
-// draw the task cards on the page
-function renderTasks() {
-    const filteredTasks = getFilteredTasks();
-
-    selectedFilterText.textContent = state.activeFilter;
-    totalTasksText.textContent = state.tasks.length;
-    const completedCount = state.tasks.filter((task) => task.completed).length;
-    completedTasksText.textContent = completedCount;
-
-    if (filteredTasks.length === 0) {
-        taskGrid.innerHTML = `
-        <div class="empty-box">
-            <h3>No tasks found</h3>
-            <p>Try another filter or create a new task.</p>
-        </div>
-        `;
-        return;
-    }
-
-    taskGrid.innerHTML = filteredTasks
-        .map((task) => {
-        return `
-            <article class="task-card ${task.completed ? 'task-done' : ''}">
-                <button class="delete-btn" data-id="${task.id}" type="button">×</button>
-                <button class="complete-btn" data-id="${task.id}" type="button">
-                    ${task.completed ? 'Undo' : 'Done'}
-                </button>
-                <button class="edit-btn" data-id="${task.id}" type="button">Edit</button>
-                <span class="task-badge">${task.type}</span>
-                <h3>${task.title}</h3>
-                <p>${task.description}</p>
-            </article>
-        `;
-        })
-        .join('');
-}
-
-// create a new task from the form
-taskForm.addEventListener('submit', (event) => {
+form.addEventListener('submit', (event) => {
     event.preventDefault();
-
-    const title = taskTitleInput.value.trim();
-    const type = taskTypeInput.value;
-    const description = taskDescriptionInput.value.trim();
-
-    if (!title || !description) {
-        alert('Please fill title and notes.');
+    const title = titleInput.value.trim();
+    const meta = metaInput.value.trim() || 'No meta info provided';
+    const status = statusInput.value;
+    if (title.length < 4) {
+        titleHint.textContent = 'Title is too short.';
+        titleHint.style.color = 'var(--color-error)';
+        logEvent('submit blocked', 'Validation prevented form submission');
+        titleInput.focus();
         return;
     }
-
-    const newTask = {
-        id: Date.now(),
-        type,
-        title,
-        description
-    };
-
-    state.tasks.unshift(newTask);
-    state.activeFilter = 'All';
-
-    taskForm.reset();
-    updateActiveChip();
-    renderTasks();
+    const article = document.createElement('article');
+    article.className = 'task-card';
+    article.dataset.status = status;
+    article.dataset.id = String(state.taskId++);
+    article.innerHTML = `
+        <div class="drag-handle" title="Drag task" aria-hidden="true">⋮⋮</div>
+        <div>
+          <div class="task-title"></div>
+          <div class="task-meta"></div>
+        </div>
+        <span class="status ${status}">${status}</span>
+      `;
+    article.querySelector('.task-title').textContent = title;
+    article.querySelector('.task-meta').textContent = meta;
+    taskList.prepend(article);
+    form.reset();
+    titleHint.textContent = '4-60 characters. Press / to focus here.';
+    titleHint.style.color = 'var(--color-text-muted)';
+    applyFilter(state.filter);
+    logEvent('submit', `Created task "${title}"`);
 });
 
-
-// remove a task when delete button is clicked
-taskGrid.addEventListener('click', (event) => {
-    const deleteButton = event.target.closest('.delete-btn');
-
-    if (!deleteButton) {
-        return;
+document.addEventListener('keydown', (event) => {
+    if (event.target.matches('input, textarea, select') && event.key !== '/') return;
+    if (event.key.toLowerCase() === 'n') {
+        event.preventDefault();
+        titleInput.focus();
+        logEvent('shortcut', 'Focused title input with N');
     }
-
-    const taskId = Number(deleteButton.dataset.id);
-
-    state.tasks = state.tasks.filter((task) => task.id !== taskId);
-    renderTasks();
+    if (event.key === '/') {
+        event.preventDefault();
+        titleInput.focus();
+        logEvent('shortcut', 'Focused title input with /');
+    }
+    if (event.key.toLowerCase() === 'd') {
+        event.preventDefault();
+        toggleTheme();
+    }
+    if (event.key.toLowerCase() === 'l') {
+        event.preventDefault();
+        logNode.innerHTML = '';
+        logEvent('shortcut', 'Cleared interaction log');
+    }
 });
 
-// edit task title when edit button is clicked
-taskGrid.addEventListener('click', (event) => {
-    const editButton = event.target.closest('.edit-btn');
-
-    if (!editButton) {
-        return;
-    }
-
-    const taskId = Number(editButton.dataset.id);
-    const taskToEdit = state.tasks.find((task) => task.id === taskId);
-
-    if (!taskToEdit) {
-        return;
-    }
-
-    const newTitle = prompt('Edit task title:', taskToEdit.title);
-
-    if (!newTitle || !newTitle.trim()) {
-        return;
-    }
-
-    state.tasks = state.tasks.map((task) => {
-        if (task.id === taskId) {
-        return { ...task, title: newTitle.trim() };
-        }
-
-        return task;
-    });
-
-    renderTasks();
+themeToggle.addEventListener('click', toggleTheme);
+clearLogBtn.addEventListener('click', () => {
+    logNode.innerHTML = '';
+    logEvent('ui event', 'Cleared interaction log');
 });
 
-// toggle completed state when done button is clicked
-taskGrid.addEventListener('click', (event) => {
-    const completeButton = event.target.closest('.complete-btn');
-
-    if (!completeButton) {
-        return;
-    }
-
-    const taskId = Number(completeButton.dataset.id);
-
-    state.tasks = state.tasks.map((task) => {
-        if (task.id === taskId) {
-        return { ...task, completed: !task.completed };
-        }
-
-        return task;
-    });
-
-    renderTasks();
-});
-
-// show tasks on the first page load
-renderTasks();
+applyFilter('all');
+updateMetrics();
+logEvent('init', 'App booted with delegated, pointer, keyboard, and form events');
