@@ -39,43 +39,43 @@
             <!-- LEFT: board area -->
             <section class="panel" aria-labelledby="board-title">
                 <div class="panel-head">
-                <div>
-                    <h2 id="board-title">Board</h2>
-                    <p>Static cards for now. Interactions come next.</p>
+                    <div>
+                        <h2 id="board-title">Board</h2>
+                        <p>Static cards for now. Interactions come next.</p>
+                    </div>
+
+                    <div class="toolbar" aria-label="Board filters">
+                        <button class="chip chip-active" type="button" data-filter="All">All</button>
+                        <button class="chip" type="button" data-filter="UI">UI</button>
+                        <button class="chip" type="button" data-filter="API">API</button>
+                        <button class="chip" type="button" data-filter="Bug">Bug</button>
+                    </div>
                 </div>
 
-                <div class="toolbar" aria-label="Board filters">
-                    <button class="chip chip-active" type="button">All</button>
-                    <button class="chip" type="button">UI</button>
-                    <button class="chip" type="button">API</button>
-                    <button class="chip" type="button">Bug</button>
-                </div>
-                </div>
+                <div class="task-grid" id="taskGrid">
+                    <article class="task-card">
+                        <span class="task-badge">UI</span>
+                        <h3>Build board toolbar</h3>
+                        <p>Create filter chips and a clean header layout for the board.</p>
+                    </article>
 
-                <div class="task-grid">
-                <article class="task-card">
-                    <span class="task-badge">UI</span>
-                    <h3>Build board toolbar</h3>
-                    <p>Create filter chips and a clean header layout for the board.</p>
-                </article>
+                    <article class="task-card">
+                        <span class="task-badge">API</span>
+                        <h3>Connect tasks endpoint</h3>
+                        <p>Prepare the frontend structure for future fetch integration.</p>
+                    </article>
 
-                <article class="task-card">
-                    <span class="task-badge">API</span>
-                    <h3>Connect tasks endpoint</h3>
-                    <p>Prepare the frontend structure for future fetch integration.</p>
-                </article>
+                    <article class="task-card">
+                        <span class="task-badge">Bug</span>
+                        <h3>Fix mobile spacing</h3>
+                        <p>Check padding and stacked layout on smaller screens.</p>
+                    </article>
 
-                <article class="task-card">
-                    <span class="task-badge">Bug</span>
-                    <h3>Fix mobile spacing</h3>
-                    <p>Check padding and stacked layout on smaller screens.</p>
-                </article>
-
-                <article class="task-card">
-                    <span class="task-badge">UI</span>
-                    <h3>Add empty state style</h3>
-                    <p>Design a polished fallback when there are no tasks.</p>
-                </article>
+                    <article class="task-card">
+                        <span class="task-badge">UI</span>
+                        <h3>Add empty state style</h3>
+                        <p>Design a polished fallback when there are no tasks.</p>
+                    </article>
                 </div>
             </section>
 
@@ -109,22 +109,24 @@
                 </section>
 
                 <section class="panel" aria-labelledby="metrics-title">
-                <h2 id="metrics-title">Live metrics</h2>
+                    <h2 id="metrics-title">Live metrics</h2>
 
-                <div class="metric-list">
-                    <div class="metric">
-                    <span>Total tasks</span>
-                    <strong>4</strong>
+                    <div class="metric-list">
+                        <div class="metric">
+                        <span>Total tasks</span>
+                        <strong>4</strong>
+                        </div>
+
+                        <div class="metric">
+                        <span>Completed</span>
+                        <strong>0</strong>
+                        </div>
+
+                        <div class="metric">
+                        <span>Selected filter</span>
+                        <strong id="selectedFilterText">All</strong>
+                        </div>
                     </div>
-                    <div class="metric">
-                    <span>Completed</span>
-                    <strong>0</strong>
-                    </div>
-                    <div class="metric">
-                    <span>Selected filter</span>
-                    <strong>All</strong>
-                    </div>
-                </div>
                 </section>
             </aside>
 

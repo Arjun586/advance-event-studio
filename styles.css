@@ -298,3 +298,15 @@ header {
         grid-template-columns: 1fr;
     }
 }
+
+.empty-box {
+    grid-column: 1 / -1;
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-2);
+    border: 1px dashed color-mix(in srgb, var(--color-text) 18%, transparent);
+}
+
+.empty-box h3 {
+    margin-bottom: var(--space-2);
+}
