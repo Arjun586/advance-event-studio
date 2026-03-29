@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Event Studio</title>
+
+    <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=cabinet-grotesk@500,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+    
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="app">
+
+        <!-- HEADER: brand + actions -->
+        <header>
+        <div class="brand">
+            
+            <div class="logo" aria-hidden="true">★</div>
+            <div>
+            <h1>Advanced Event Studio</h1>
+            <p>We'll build this step by step.</p>
+            </div>
+        </div>
+
+        <!-- Theme toggle lives here> -->
+        <div class="header-actions">
+            <button class="ghost-btn" id="themeToggle" type="button">Theme</button>
+        </div>
+        </header>
+
+
+        <main id="main" class="layout">
+
+            <!-- LEFT: board area -->
+            <section class="panel" aria-labelledby="board-title">
+                <div class="panel-head">
+                <div>
+                    <h2 id="board-title">Board</h2>
+                    <p>Static cards for now. Interactions come next.</p>
+                </div>
+
+                <div class="toolbar" aria-label="Board filters">
+                    <button class="chip chip-active" type="button">All</button>
+                    <button class="chip" type="button">UI</button>
+                    <button class="chip" type="button">API</button>
+                    <button class="chip" type="button">Bug</button>
+                </div>
+                </div>
+
+                <div class="task-grid">
+                <article class="task-card">
+                    <span class="task-badge">UI</span>
+                    <h3>Build board toolbar</h3>
+                    <p>Create filter chips and a clean header layout for the board.</p>
+                </article>
+
+                <article class="task-card">
+                    <span class="task-badge">API</span>
+                    <h3>Connect tasks endpoint</h3>
+                    <p>Prepare the frontend structure for future fetch integration.</p>
+                </article>
+
+                <article class="task-card">
+                    <span class="task-badge">Bug</span>
+                    <h3>Fix mobile spacing</h3>
+                    <p>Check padding and stacked layout on smaller screens.</p>
+                </article>
+
+                <article class="task-card">
+                    <span class="task-badge">UI</span>
+                    <h3>Add empty state style</h3>
+                    <p>Design a polished fallback when there are no tasks.</p>
+                </article>
+                </div>
+            </section>
+
+            <!-- RIGHT: sidebar -->
+            <aside class="side">
+                <section class="panel" aria-labelledby="create-task-title">
+                <h2 id="create-task-title">Create task</h2>
+
+                <form class="task-form">
+                    <label>
+                    Title
+                    <input type="text" placeholder="Ex. Build drag feature" />
+                    </label>
+
+                    <label>
+                    Type
+                    <select>
+                        <option>UI</option>
+                        <option>API</option>
+                        <option>Bug</option>
+                    </select>
+                    </label>
+
+                    <label>
+                    Notes
+                    <textarea rows="4" placeholder="Short task description..."></textarea>
+                    </label>
+
+                    <button class="primary-btn" type="button">Add task</button>
+                </form>
+                </section>
+
+                <section class="panel" aria-labelledby="metrics-title">
+                <h2 id="metrics-title">Live metrics</h2>
+
+                <div class="metric-list">
+                    <div class="metric">
+                    <span>Total tasks</span>
+                    <strong>4</strong>
+                    </div>
+                    <div class="metric">
+                    <span>Completed</span>
+                    <strong>0</strong>
+                    </div>
+                    <div class="metric">
+                    <span>Selected filter</span>
+                    <strong>All</strong>
+                    </div>
+                </div>
+                </section>
+            </aside>
+
+        </main>
+    </div>
+
+    
+    <script src="script.js"></script>
+</body>
+</html>

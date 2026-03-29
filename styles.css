@@ -1,0 +1,300 @@
+
+:root, [data-theme="light"] {
+    /* --- Type scale (fluid = shrinks on small screens) --- */
+    --text-sm:   clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+    --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+    --text-lg:   clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+    --text-xl:   clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+
+    /* --- Spacing (4px base unit — all multiples of 4) --- */
+    --space-2: 0.5rem;   /*  8px */
+    --space-3: 0.75rem;  /* 12px */
+    --space-4: 1rem;     /* 16px */
+    --space-5: 1.25rem;  /* 20px */
+    --space-6: 1.5rem;   /* 24px */
+    --space-8: 2rem;     /* 32px */
+
+    /* --- Colors (light mode) --- */
+    --color-bg:             #f7f6f2;
+    --color-surface:        #f9f8f5;
+    --color-surface-2:      #fbfbf9;
+    --color-border:         #d4d1ca;
+    --color-text:           #28251d;
+    --color-text-muted:     #7a7974;
+    --color-primary:        #01696f;
+    --color-primary-hover:  #0c4e54;
+
+    /* --- Shape --- */
+    --radius-md: 0.85rem;
+    --radius-lg: 1.25rem;
+    --radius-full: 9999px;
+
+    /* --- Animation easing --- */
+    --transition: 180ms cubic-bezier(.16,1,.3,1);
+
+    /* --- Fonts --- */
+    --font-body: 'General Sans', system-ui, sans-serif;
+    --font-display: 'Cabinet Grotesk', system-ui, sans-serif;
+}
+
+/* Dark mode: only the COLOR tokens change, everything else stays */
+[data-theme="dark"] {
+    --color-bg:            #171614;
+    --color-surface:       #1c1b19;
+    --color-surface-2:     #201f1d;
+    --color-border:        #393836;
+    --color-text:          #cdccca;
+    --color-text-muted:    #97948f;
+    --color-primary:       #4f98a3;
+    --color-primary-hover: #227f8b;
+}
+
+    
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    /* Smooth theme switch */
+    transition: background var(--transition), color var(--transition);
+}
+
+/* All form elements inherit the body font (browser default overrides this) */
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* Interactive elements get transition for free */
+a, button, input, textarea {
+    transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+
+/* Headings */
+h1, h2, h3 { line-height: 1.1; }
+h1 { font-family: var(--font-display); font-size: var(--text-xl); }
+h2 { font-size: var(--text-lg); }
+p  { color: var(--color-text-muted); max-width: 72ch; }
+
+/* =============================================
+   SKIP LINK (accessibility)
+   Hidden off-screen, appears on Tab key press.
+   ============================================= */
+.skip-link { position: absolute; left: -9999px; }
+.skip-link:focus {
+    left: var(--space-4); top: var(--space-4);
+    z-index: 99;
+    background: var(--color-primary); color: white;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+}
+
+
+.app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-4);
+}
+
+/* Header: brand left, actions right */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-6) 0 var(--space-8);
+}
+
+.brand { display: flex; gap: var(--space-3); align-items: center; }
+
+/* Logo: just a placeholder box for now */
+.logo {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    background: var(--color-primary);
+    color: white;
+    display: grid; place-items: center;
+    font-size: 1.2rem;
+    flex-shrink: 0; /* don't squish on small screens */
+}
+
+.header-actions { display: flex; gap: var(--space-3); align-items: center; }
+
+/* Two-column main layout */
+.layout {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr; /* left is wider */
+    gap: var(--space-4);
+}
+
+/* Sidebar stacks its panels vertically */
+.side { display: grid; gap: var(--space-4); align-content: start; }
+
+/* Panel: the card container used everywhere */
+.panel {
+    background: var(--color-surface);
+    border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+}
+
+/* Buttons */
+.ghost-btn {
+    padding: 0 var(--space-4);
+    min-height: 44px; /* touch target */
+    border-radius: var(--radius-full);
+    border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+    background: var(--color-surface);
+    cursor: pointer;
+}
+.ghost-btn:hover { background: var(--color-surface-2); }
+
+/* Responsive: single column on small screens */
+@media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    header { flex-direction: column; }
+}
+
+
+.panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+}
+
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.chip {
+    min-height: 40px;
+    padding: 0 var(--space-4);
+    border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+    border-radius: var(--radius-full);
+    background: var(--color-surface-2);
+    cursor: pointer;
+}
+
+.chip:hover {
+    background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface-2));
+}
+
+.chip-active {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+/* Step 2: board cards */
+.task-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+}
+
+.task-card {
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-2);
+    border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.task-card h3 {
+    margin: var(--space-3) 0 var(--space-2);
+    font-size: 1.05rem;
+}
+
+.task-badge {
+    display: inline-block;
+    padding: 0.35rem 0.7rem;
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--color-primary) 14%, transparent);
+    color: var(--color-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+/* Step 2: form */
+.task-form {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+}
+
+.task-form label {
+    display: grid;
+    gap: var(--space-2);
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.task-form input,
+.task-form select,
+.task-form textarea {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+    background: var(--color-surface-2);
+    outline: none;
+}
+
+.task-form input:focus,
+.task-form select:focus,
+.task-form textarea:focus {
+    border-color: var(--color-primary);
+}
+
+/* Step 2: primary button */
+.primary-btn {
+    min-height: 44px;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+    color: white;
+    border: 1px solid var(--color-primary);
+    cursor: pointer;
+}
+
+.primary-btn:hover {
+    background: var(--color-primary-hover);
+}
+
+/* Step 2: metrics */
+.metric-list {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+}
+
+.metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-2);
+    border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.metric strong {
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .panel-head {
+        flex-direction: column;
+    }
+
+    .task-grid {
+        grid-template-columns: 1fr;
+    }
+}
