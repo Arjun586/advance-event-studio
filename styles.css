@@ -286,6 +286,10 @@ p {
     user-select: none
 }
 
+.task-card[hidden] {
+    display: none !important;
+}
+
 .task-card.dragging {
     transform: scale(1.02);
     box-shadow: var(--shadow-md);
